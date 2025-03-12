@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Font Declarations */
+@font-face {
+  font-family: 'CustomArabicFont';
+  src: url('/fonts/CustomArabicFont.woff2') format('woff2'),
+       url('/fonts/CustomArabicFont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --primary-color: #FF69B4;
+  --secondary-color: #FFB6C1;
+  --accent-color: #FF1493;
+  --background-color: #ffffff;
+  --foreground-color: #171717;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-almarai), 'CustomArabicFont', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white py-2 px-4 rounded-xl hover:bg-accent transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary text-foreground py-2 px-4 rounded-xl hover:bg-primary hover:text-white transition-colors;
+  }
+  
+  .card {
+    @apply bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition-shadow;
+  }
+  
+  .section-title {
+    @apply text-2xl md:text-3xl font-bold text-primary mb-6;
+  }
+}
+
+body {
+  background: var(--background-color);
+  color: var(--foreground-color);
+  font-family: var(--font-almarai), 'CustomArabicFont', Arial, Helvetica, sans-serif;
+}
+
+/* Hide Next.js development icon */
+#__next-build-watcher {
+  display: none !important;
+}
+
+/* Hide Next.js development icon (alternative selector) */
+[data-nextjs-dialog-left-right] {
+  display: none !important;
+}
+
+/* Hide all Next.js development UI elements */
+[data-nextjs-dialog],
+[data-nextjs-toast],
+[data-nextjs-refresh] {
+  display: none !important;
+}

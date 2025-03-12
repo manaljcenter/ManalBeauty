@@ -1,0 +1,12 @@
+Please add the following Ramadan-themed images to this directory:
+
+1. crescent.png - A crescent moon image
+2. crescent-gold.png - A gold-colored crescent moon
+3. lantern.png - A traditional Ramadan lantern
+4. lantern-gold.png - A gold-colored Ramadan lantern
+5. star.png - A decorative star
+6. star-gold.png - A gold-colored decorative star
+7. pattern.png - An Islamic geometric pattern
+8. moon.png - A small moon icon
+
+You can find free Ramadan-themed images on websites like Freepik, Flaticon, or Unsplash. 

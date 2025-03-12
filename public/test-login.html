@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      background-color: #f9f9f9;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>Test Login</h1>
+  
+  <div class="form-group">
+    <label for="email">Email:</label>
+    <input type="email" id="email" value="admin@manalbeauty.com">
+  </div>
+  
+  <div class="form-group">
+    <label for="password">Password:</label>
+    <input type="password" id="password" value="admin123">
+  </div>
+  
+  <button id="loginBtn">Login</button>
+  
+  <div id="result"></div>
+  
+  <script>
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const resultDiv = document.getElementById('result');
+      
+      resultDiv.textContent = 'Logging in...';
+      
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+          credentials: 'include',
+        });
+        
+        const data = await response.json();
+        
+        resultDiv.textContent = `Status: ${response.status}\n\nResponse: ${JSON.stringify(data, null, 2)}`;
+        
+        if (response.ok) {
+          resultDiv.textContent += '\n\nLogin successful! Checking cookies...';
+          
+          // Check if cookies were set
+          const cookies = document.cookie;
+          resultDiv.textContent += `\n\nCookies: ${cookies}`;
+          
+          // Add a button to redirect to admin page
+          const adminBtn = document.createElement('button');
+          adminBtn.textContent = 'Go to Admin Page';
+          adminBtn.style.marginTop = '10px';
+          adminBtn.addEventListener('click', () => {
+            window.location.href = '/admin';
+          });
+          resultDiv.appendChild(document.createElement('br'));
+          resultDiv.appendChild(adminBtn);
+        }
+      } catch (error) {
+        resultDiv.textContent = `Error: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html> 
