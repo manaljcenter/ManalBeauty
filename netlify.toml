@@ -50,11 +50,6 @@
 # Handle Next.js routes
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-  [plugins.inputs]
-    # Enable Next.js cache
-    enable_cache = true
-    # Use the standalone output
-    use_standalone = true
 
 # Redirect all requests to Next.js
 [[redirects]]
