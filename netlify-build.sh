@@ -26,7 +26,7 @@ rm -rf node_modules/.cache
 
 # Install dependencies with specific flags to handle optional dependencies
 echo "Installing dependencies..."
-npm ci --no-optional --prefer-offline --no-audit --progress=false
+npm ci --prefer-offline --no-audit --progress=false
 
 # Create a temporary .env file to disable TypeScript checks
 echo "NEXT_TYPESCRIPT_CHECK=false" > .env.local
