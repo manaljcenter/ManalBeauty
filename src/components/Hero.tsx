@@ -61,11 +61,11 @@ const Hero = () => {
           className="mb-6"
         >
           <Image 
-            src="/images/logo-white-v2.png" 
+            src="/images/logo-white-small.png" 
             alt="مركز منال الجمال" 
             width={220} 
             height={73} 
-            className="h-auto w-auto drop-shadow-lg"
+            className="h-auto w-auto max-w-[220px] drop-shadow-lg"
           />
         </motion.div>
         <motion.p 
