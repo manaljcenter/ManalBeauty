@@ -35,8 +35,8 @@ export async function PUT(
     const updatedSession = await updateTreatmentSession(sessionId, {
       status,
       notes,
-      session_date,
-      session_time
+      date: session_date,
+      time: session_time
     });
     
     return NextResponse.json({
