@@ -65,7 +65,7 @@ const Navbar = () => {
               className={`flex items-center ${pathname === '/booking' ? 'bg-accent' : 'bg-primary'} text-white py-2 px-4 rounded-xl hover:bg-accent transition-colors`}
             >
               <FaMoon className="ml-1 text-white/80" />
-              <span>إحجزي</span>
+              <span>احجزي موعدك الآن</span>
               <FaStar className="mr-1 text-white/80 text-xs" />
             </Link>
           </div>
@@ -139,7 +139,7 @@ const Navbar = () => {
                 onClick={toggleMenu}
               >
                 <FaMoon className="ml-1 text-white/80" />
-                <span>إحجزي</span>
+                <span>احجزي موعدك الآن</span>
                 <FaStar className="mr-1 text-white/80 text-xs" />
               </Link>
             </div>
