@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { authenticateClient } from '@/lib/services/clientService';
-import { createClient } from '@/lib/supabase/server';
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,21 +21,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' },
         { status: 401 }
-      );
-    }
-    
-    // Create session with Supabase
-    const supabase = createClient();
-    const { data: sessionData, error: sessionError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    
-    if (sessionError) {
-      console.error('Error creating session:', sessionError);
-      return NextResponse.json(
-        { message: 'فشل إنشاء جلسة المستخدم' },
-        { status: 500 }
       );
     }
     

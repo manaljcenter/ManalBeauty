@@ -42,31 +42,30 @@ export async function POST(request: NextRequest) {
     
     // Upload to Supabase Storage
     const supabase = createClient();
-    const { data, error } = await supabase
-      .storage
+    const { error } = await supabase.storage
       .from('services')
       .upload(`images/${fileName}`, buffer, {
         contentType: file.type,
-        upsert: false
+        cacheControl: '3600',
+        upsert: true
       });
     
     if (error) {
       console.error('Error uploading file:', error);
       return NextResponse.json(
-        { message: 'فشل في تحميل الصورة' },
+        { message: 'فشل في رفع الملف' },
         { status: 500 }
       );
     }
     
-    // Get public URL
-    const { data: { publicUrl } } = supabase
-      .storage
+    // Get the public URL
+    const { data: publicUrlData } = supabase.storage
       .from('services')
       .getPublicUrl(`images/${fileName}`);
     
     return NextResponse.json({
-      message: 'تم تحميل الصورة بنجاح',
-      url: publicUrl
+      message: 'تم رفع الملف بنجاح',
+      url: publicUrlData.publicUrl
     });
   } catch (error) {
     console.error('Error handling file upload:', error);

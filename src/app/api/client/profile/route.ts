@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getClientById, updateClient } from '@/lib/services/clientService';
-import { verifyPassword } from '@/lib/services/authService';
 
 export async function GET(request: NextRequest) {
   try {
     // Get client ID from session cookie
-    const clientSession = request.cookies.get('client-session')?.value;
+    const clientSession = request.cookies.get('client_session')?.value;
     
     if (!clientSession) {
       return NextResponse.json(
@@ -15,14 +14,7 @@ export async function GET(request: NextRequest) {
     }
     
     const session = JSON.parse(clientSession);
-    const clientId = session.clientId;
-    
-    if (!clientId) {
-      return NextResponse.json(
-        { message: 'جلسة غير صالحة' },
-        { status: 401 }
-      );
-    }
+    const clientId = session.id;
     
     // Get client profile
     const client = await getClientById(clientId);
@@ -34,10 +26,7 @@ export async function GET(request: NextRequest) {
       );
     }
     
-    // Remove sensitive information
-    const { password, ...clientProfile } = client;
-    
-    return NextResponse.json(clientProfile);
+    return NextResponse.json(client);
   } catch (error) {
     console.error('Error fetching client profile:', error);
     return NextResponse.json(
@@ -50,35 +39,27 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     // Get client session from cookie
-    const sessionCookie = request.cookies.get('client-session');
+    const sessionCookie = request.cookies.get('client_session')?.value;
     
     if (!sessionCookie) {
       return NextResponse.json(
-        { message: 'غير مصرح به' },
+        { message: 'غير مصرح لك بالوصول' },
         { status: 401 }
       );
     }
     
-    // Parse session
-    const session = JSON.parse(sessionCookie.value);
+    const session = JSON.parse(sessionCookie);
+    const clientId = session.id;
     
-    // Get request body
+    // Get update data
     const body = await request.json();
-    const { name, phone, password } = body;
-    
-    // Validate required fields
-    if (!name || !phone) {
-      return NextResponse.json(
-        { message: 'الاسم ورقم الهاتف مطلوبان' },
-        { status: 400 }
-      );
-    }
+    const { name, email, phone } = body;
     
     // Update client
-    const updatedClient = await updateClient(session.clientId, {
+    const updatedClient = await updateClient(clientId, {
       name,
-      phone,
-      password: password || undefined
+      email,
+      phone
     });
     
     if (!updatedClient) {
@@ -88,17 +69,9 @@ export async function PUT(request: NextRequest) {
       );
     }
     
-    // Return updated client data
     return NextResponse.json({
       message: 'تم تحديث الملف الشخصي بنجاح',
-      client: {
-        id: updatedClient.id,
-        name: updatedClient.name,
-        email: updatedClient.email,
-        phone: updatedClient.phone,
-        created_at: updatedClient.created_at,
-        updated_at: updatedClient.updated_at
-      }
+      client: updatedClient
     });
   } catch (error) {
     console.error('Error updating client profile:', error);

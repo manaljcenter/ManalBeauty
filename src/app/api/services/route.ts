@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllServices, createService } from '@/lib/services/serviceService';
+import { getAllServices, createService, getServicesByCategory } from '@/lib/services/serviceService';
 import { createClient } from '@/lib/supabase/server';
 
 // Get all services
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const supabase = createClient();
     const { data, error } = await supabase
@@ -66,6 +66,22 @@ export async function POST(request: NextRequest) {
         message: 'حدث خطأ أثناء إنشاء الخدمة', 
         error: error instanceof Error ? error.message : String(error)
       },
+      { status: 500 }
+    );
+  }
+}
+
+// Get services by category
+export async function GET_BY_CATEGORY() {
+  try {
+    // Get services by category
+    const services = await getServicesByCategory();
+    
+    return NextResponse.json(services);
+  } catch (error) {
+    console.error('Error fetching services by category:', error);
+    return NextResponse.json(
+      { message: 'حدث خطأ أثناء جلب الخدمات' },
       { status: 500 }
     );
   }
