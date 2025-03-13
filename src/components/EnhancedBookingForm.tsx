@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import ClientProfileForm from './ClientProfileForm';
 
 interface Service {
   id: string;
@@ -12,6 +11,12 @@ interface Service {
   duration: number;
   category: string;
   image: string;
+}
+
+interface ClientProfile {
+  name: string;
+  email: string;
+  phone: string;
 }
 
 interface EnhancedBookingFormProps {
@@ -82,17 +87,6 @@ export default function EnhancedBookingForm({ services }: EnhancedBookingFormPro
 
   const handlePrevStep = () => {
     setStep(1);
-  };
-
-  const handleClientProfileSubmit = async (profileData: any) => {
-    setFormData(prev => ({
-      ...prev,
-      client_name: profileData.name,
-      client_email: profileData.email,
-      client_phone: profileData.phone,
-    }));
-    
-    await handleSubmit();
   };
 
   const handleSubmit = async (e?: React.FormEvent) => {
