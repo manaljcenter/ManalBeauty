@@ -40,6 +40,7 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <head>
+        <link rel="stylesheet" href="/force-refresh.css?v=1" />
         <style>{`
           #__next-build-watcher,
           [data-nextjs-dialog-left-right],
