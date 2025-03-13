@@ -28,8 +28,25 @@ rm -rf node_modules/.cache
 echo "Installing dependencies..."
 npm ci --prefer-offline --no-audit --progress=false
 
-# Create a temporary .env file to disable TypeScript checks
-echo "NEXT_TYPESCRIPT_CHECK=false" > .env.local
+# Create a temporary .env file to disable TypeScript checks and set required environment variables
+echo "Creating .env.local file with required variables..."
+cat > .env.local << EOL
+NEXT_TYPESCRIPT_CHECK=false
+NODE_ENV=production
+NEXT_TELEMETRY_DISABLED=1
+BUILD_DIR=.next
+NEXT_CACHE_DIR=.next/cache
+NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL:-https://yvbwzbcxogwxvbymlmsj.supabase.co}
+NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2Ynd6YmN4b2d3eHZieW1sbXNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE3NDAwMjAsImV4cCI6MjA1NzMxNjAyMH0._GUA9qK5OmPe-DN_89UqHPncW7JcN36rcFjcjoNdVQg}
+supabaseUrl=${supabaseUrl:-https://yvbwzbcxogwxvbymlmsj.supabase.co}
+supabaseAnonKey=${supabaseAnonKey:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2Ynd6YmN4b2d3eHZieW1sbXNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE3NDAwMjAsImV4cCI6MjA1NzMxNjAyMH0._GUA9qK5OmPe-DN_89UqHPncW7JcN36rcFjcjoNdVQg}
+EOL
+
+# Print environment variables for debugging (without sensitive values)
+echo "===== Environment Variables ====="
+echo "NEXT_PUBLIC_SUPABASE_URL is set: ${NEXT_PUBLIC_SUPABASE_URL:+true}"
+echo "supabaseUrl is set: ${supabaseUrl:+true}"
+echo "=================================="
 
 # Build the Next.js application with increased memory limit and skip TypeScript checks
 echo "Building Next.js application..."
