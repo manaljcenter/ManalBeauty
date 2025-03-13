@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  // Disable server components for static export
+  trailingSlash: true,
 };
 
 export default nextConfig;
