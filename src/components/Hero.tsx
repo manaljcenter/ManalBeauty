@@ -63,8 +63,8 @@ const Hero = () => {
           <Image 
             src="/images/logo-white.png" 
             alt="مركز منال الجمال" 
-            width={300} 
-            height={100} 
+            width={220} 
+            height={73} 
             className="h-auto w-auto drop-shadow-lg"
           />
         </motion.div>
@@ -86,7 +86,7 @@ const Hero = () => {
             href="/booking" 
             className="btn-primary text-lg px-8 py-3 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1"
           >
-            احجز موعدك الآن
+            احجزي موعدك الآن
           </Link>
           <Link 
             href="/services" 
