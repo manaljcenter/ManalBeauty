@@ -67,15 +67,100 @@ echo "=================================="
 echo "Building Next.js application..."
 NODE_OPTIONS="--max_old_space_size=4096" NEXT_TYPESCRIPT_CHECK=false npm run build
 
-# Create a _redirects file for Netlify
-echo "Creating Netlify _redirects file..."
+# Ensure the public directory exists
+echo "Ensuring public directory exists..."
+mkdir -p public
+
+# Create a _redirects file for Netlify in both .next and public directories
+echo "Creating Netlify _redirects files..."
 cat > .next/_redirects << EOL
-/* /.netlify/functions/___netlify-handler 200!
+# Netlify redirects file
+# Redirect all requests to the Next.js handler
+/*    /.netlify/functions/___netlify-handler    200!
+
+# SPA fallback
+/*    /index.html   404
 EOL
+
+# Copy _redirects to public directory to ensure it's included in the build
+cp .next/_redirects public/_redirects || true
 
 # Create a 404.html file for Netlify
 echo "Creating 404.html file..."
-cp .next/server/app/_not-found.html .next/404.html || true
+if [ -f .next/server/app/_not-found.html ]; then
+  cp .next/server/app/_not-found.html .next/404.html
+else
+  # Create a basic 404 page if the not-found page doesn't exist
+  cat > .next/404.html << EOL
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - الصفحة غير موجودة</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f9fafb;
+    }
+    .container {
+      text-align: center;
+      padding: 2rem;
+    }
+    h1 {
+      color: #111827;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    p {
+      color: #6b7280;
+      margin-bottom: 2rem;
+    }
+    a {
+      display: inline-block;
+      background-color: #db2777;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.375rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    a:hover {
+      background-color: #be185d;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>404 - الصفحة غير موجودة</h1>
+    <p>عذراً، الصفحة التي تبحث عنها غير موجودة.</p>
+    <a href="/">العودة إلى الصفحة الرئيسية</a>
+  </div>
+</body>
+</html>
+EOL
+fi
+
+# Copy 404.html to public directory
+cp .next/404.html public/404.html || true
+
+# Copy the standalone directory if it exists
+if [ -d ".next/standalone" ]; then
+  echo "Copying standalone directory..."
+  cp -R .next/standalone/* .next/
+fi
+
+# Ensure the static directory is properly copied
+if [ -d ".next/static" ]; then
+  echo "Ensuring static directory is properly set up..."
+  mkdir -p .next/standalone/public
+  cp -R .next/static .next/standalone/public/ || true
+fi
 
 # Copy cache to Netlify's persistent cache location if it exists
 if [ -d "/opt/build/cache" ]; then

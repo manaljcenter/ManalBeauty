@@ -1,0 +1,6 @@
+# Netlify redirects file
+# Redirect all requests to the Next.js handler
+/*    /.netlify/functions/___netlify-handler    200!
+
+# SPA fallback
+/*    /index.html   404 

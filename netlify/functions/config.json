@@ -1,0 +1,12 @@
+{
+  "config": {
+    "nodeModulesPaths": [
+      "../../node_modules"
+    ],
+    "includedFiles": [
+      "../../.next/standalone/**",
+      "../../.next/static/**"
+    ],
+    "timeout": 30
+  }
+} 

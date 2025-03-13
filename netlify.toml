@@ -1,6 +1,7 @@
 [build]
   command = "chmod +x netlify-build.sh && ./netlify-build.sh"
   publish = ".next"
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF ./package-lock.json"
 
 [build.environment]
   NEXT_TELEMETRY_DISABLED = "1"
@@ -23,6 +24,8 @@
   node_bundler = "esbuild"
   # Set a longer timeout for functions
   included_files = [".next/standalone/**", ".next/static/**"]
+  # Increase function timeout
+  external_node_modules = ["sharp"]
 
 # Optimize build caching
 [build.processing]
@@ -63,7 +66,7 @@
 # Fallback for 404 errors - redirect to index
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/404.html"
   status = 404
 
 # Cache control for static assets
