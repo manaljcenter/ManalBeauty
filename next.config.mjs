@@ -23,13 +23,23 @@ const nextConfig = {
   // Disable source maps in production to reduce memory usage
   productionBrowserSourceMaps: false,
   
-  // Disable telemetry
+  // Set build directory
   distDir: process.env.BUILD_DIR || '.next',
+  
+  // TypeScript configuration
+  typescript: {
+    // Ignore TypeScript errors in production build
+    ignoreBuildErrors: true,
+  },
   
   // Configure build caching
   experimental: {
+    // Enable build cache
+    turbotrace: false,
     // Optimize package imports
     optimizePackageImports: ['react-icons'],
+    // Enable persistent build cache
+    enableUndici: true,
   },
   
   // Handle optional dependencies

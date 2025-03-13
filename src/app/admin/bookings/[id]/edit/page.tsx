@@ -2,22 +2,17 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { getBookingById } from '@/lib/services/bookingService';
 import BookingEditForm from '@/components/admin/BookingEditForm';
-import { getServices } from '@/lib/services/serviceService';
+import { getAllServices } from '@/lib/services/serviceService';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
+import { IdParams } from '@/types/next';
 
 export const metadata: Metadata = {
   title: 'تعديل الحجز | منال للتجميل',
   description: 'تعديل تفاصيل الحجز',
 };
 
-interface PageParams {
-  params: {
-    id: string;
-  };
-}
-
-export default async function EditBookingPage({ params }: PageParams) {
+export default async function EditBookingPage({ params }: IdParams) {
   const { id } = params;
   
   try {
@@ -27,7 +22,7 @@ export default async function EditBookingPage({ params }: PageParams) {
       notFound();
     }
     
-    const services = await getServices();
+    const services = await getAllServices();
     
     return (
       <main className="container mx-auto py-12 px-4">
@@ -47,7 +42,7 @@ export default async function EditBookingPage({ params }: PageParams) {
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="p-6">
               <Suspense fallback={<div>جاري التحميل...</div>}>
-                <BookingEditForm booking={booking} services={services} />
+                <BookingEditForm booking={booking} />
               </Suspense>
             </div>
           </div>
