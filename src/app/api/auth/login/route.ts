@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
 
     // Set session cookie
     response.cookies.set({
-      name: 'session',
+      name: 'admin_session',
       value: JSON.stringify(session),
       httpOnly: true,
       path: '/',

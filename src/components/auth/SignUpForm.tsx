@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast, Toaster } from 'react-hot-toast';
 import { createClient } from '@/lib/supabase/client';
+import { getURL } from '@/lib/utils';
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -97,7 +98,7 @@ export default function SignUpForm() {
             name: formData.name,
             phone: formData.phone
           },
-          emailRedirectTo: window.location.origin
+          emailRedirectTo: `${getURL()}auth/login`
         }
       });
       
@@ -109,7 +110,7 @@ export default function SignUpForm() {
             name: formData.name,
             phone: formData.phone
           },
-          emailRedirectTo: window.location.origin
+          emailRedirectTo: `${getURL()}auth/login`
         }
       });
       

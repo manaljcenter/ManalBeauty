@@ -14,6 +14,9 @@ const protectedAdminRoutes = [
   '/manal',
   '/manal/services',
   '/manal/bookings',
+  '/admin',
+  '/admin/services',
+  '/admin/bookings',
 ];
 
 // Define public client routes (no authentication required)
@@ -25,6 +28,7 @@ const publicClientRoutes = [
 // Define public admin routes (no authentication required)
 const publicAdminRoutes = [
   '/manal/login',
+  '/admin/login',
 ];
 
 export function middleware(request: NextRequest) {
@@ -70,14 +74,14 @@ export function middleware(request: NextRequest) {
   
   // If it's a protected admin route and no admin session exists, redirect to login
   if (isProtectedAdminRoute && !adminSession) {
-    const url = new URL('/manal/login', request.url);
+    const url = new URL('/admin/login', request.url);
     url.searchParams.set('redirect', pathname);
     return NextResponse.redirect(url);
   }
   
   // If it's a public admin route and admin session exists, redirect to dashboard
   if (isPublicAdminRoute && adminSession) {
-    return NextResponse.redirect(new URL('/manal', request.url));
+    return NextResponse.redirect(new URL('/admin', request.url));
   }
   
   // For all other routes, continue
@@ -88,5 +92,6 @@ export const config = {
   matcher: [
     '/client/:path*',
     '/manal/:path*',
+    '/admin/:path*',
   ],
 }; 

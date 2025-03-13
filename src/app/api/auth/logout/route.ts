@@ -5,8 +5,9 @@ export async function POST() {
     // Create response with success message
     const response = NextResponse.json({ message: 'تم تسجيل الخروج بنجاح' });
     
-    // Clear the session cookie
-    response.cookies.set('session', '', { maxAge: 0 });
+    // Clear the session cookies
+    response.cookies.set('admin_session', '', { maxAge: 0 });
+    response.cookies.set('user-info', '', { maxAge: 0 });
     
     return response;
   } catch (error) {
