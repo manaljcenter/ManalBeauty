@@ -3,8 +3,8 @@
   publish = "out"
 
 [build.environment]
-  # Specify Node.js version - Next.js 15 requires Node.js 18.17.0 or newer
-  NODE_VERSION = "18.17.0"
+  # Specify Node.js version - Next.js 15 requires Node.js 18.18.0 or newer
+  NODE_VERSION = "18.18.0"
   NPM_VERSION = "9.6.7"
   # Skip the Netlify Next.js plugin's auto-installation
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
