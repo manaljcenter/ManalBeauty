@@ -28,9 +28,9 @@ mkdir -p node_modules/.cache
 
 # Ensure cache directories are properly set up for Netlify
 echo "Setting up Netlify cache directories..."
-mkdir -p /opt/build/cache/next/cache
-mkdir -p /opt/build/cache/next/server
-mkdir -p /opt/build/cache/next/server/chunks
+mkdir -p /opt/build/cache/next/cache || true
+mkdir -p /opt/build/cache/next/server || true
+mkdir -p /opt/build/cache/next/server/chunks || true
 mkdir -p /opt/build/cache/next/server/chunks/app || true
 
 # Clean up any previous builds but preserve cache
@@ -66,6 +66,16 @@ echo "=================================="
 # Build the Next.js application with increased memory limit and skip TypeScript checks
 echo "Building Next.js application..."
 NODE_OPTIONS="--max_old_space_size=4096" NEXT_TYPESCRIPT_CHECK=false npm run build
+
+# Create a _redirects file for Netlify
+echo "Creating Netlify _redirects file..."
+cat > .next/_redirects << EOL
+/* /.netlify/functions/___netlify-handler 200!
+EOL
+
+# Create a 404.html file for Netlify
+echo "Creating 404.html file..."
+cp .next/server/app/_not-found.html .next/404.html || true
 
 # Copy cache to Netlify's persistent cache location if it exists
 if [ -d "/opt/build/cache" ]; then

@@ -21,6 +21,8 @@
   directory = ".netlify/functions-internal"
   # Increase the function timeout
   node_bundler = "esbuild"
+  # Set a longer timeout for functions
+  included_files = [".next/standalone/**", ".next/static/**"]
 
 # Optimize build caching
 [build.processing]
@@ -56,6 +58,13 @@
   from = "/*"
   to = "/.netlify/functions/___netlify-handler"
   status = 200
+  force = true
+
+# Fallback for 404 errors - redirect to index
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 404
 
 # Cache control for static assets
 [[headers]]

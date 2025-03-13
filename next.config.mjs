@@ -82,6 +82,15 @@ const nextConfig = {
     // Number of pages that should be kept simultaneously without being disposed
     pagesBufferLength: 5,
   },
+  
+  // Configure trailing slash for better compatibility with Netlify
+  trailingSlash: false,
+  
+  // Configure asset prefix for Netlify
+  assetPrefix: process.env.NODE_ENV === 'production' ? undefined : undefined,
+  
+  // Configure powered by header
+  poweredByHeader: false,
 };
 
 // Disable Next.js telemetry
