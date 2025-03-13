@@ -61,7 +61,7 @@ const Hero = () => {
           className="mb-6"
         >
           <Image 
-            src="/images/logo-white.png" 
+            src="/images/logo-white.png?v=1" 
             alt="مركز منال الجمال" 
             width={220} 
             height={73} 
