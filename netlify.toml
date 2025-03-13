@@ -10,6 +10,8 @@
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
   # Use Netlify Edge for better performance
   NEXT_USE_NETLIFY_EDGE = "true"
+  # Increase build memory limit
+  NODE_OPTIONS = "--max_old_space_size=4096"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
