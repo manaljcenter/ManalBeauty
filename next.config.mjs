@@ -23,12 +23,13 @@ const nextConfig = {
   // Disable source maps in production to reduce memory usage
   productionBrowserSourceMaps: false,
   
+  // Disable telemetry
+  distDir: process.env.BUILD_DIR || '.next',
+  
   // Configure build caching
   experimental: {
     // Optimize package imports
     optimizePackageImports: ['react-icons'],
-    // Disable turbotrace to reduce memory usage
-    turbotrace: false,
   },
   
   // Handle optional dependencies
@@ -51,11 +52,9 @@ const nextConfig = {
     
     return config;
   },
-  
-  // Disable telemetry
-  telemetry: {
-    telemetryDisabled: true,
-  },
 };
+
+// Disable Next.js telemetry outside of the config object
+export const generateBuildId = () => 'build';
 
 export default nextConfig; 
