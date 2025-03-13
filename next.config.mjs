@@ -32,14 +32,14 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   
-  // Configure build caching
+  // Configure build caching and experimental features
   experimental: {
-    // Enable build cache
-    turbotrace: false,
     // Optimize package imports
     optimizePackageImports: ['react-icons'],
-    // Enable persistent build cache
-    enableUndici: true,
+    // Enable proper caching
+    cacheMaxMemorySize: 0, // Unlimited memory cache size
+    // Enable incremental compilation
+    incrementalCacheHandlerPath: require.resolve('./cache-handler.js'),
   },
   
   // Handle optional dependencies
@@ -64,7 +64,7 @@ const nextConfig = {
   },
 };
 
-// Disable Next.js telemetry outside of the config object
+// Disable Next.js telemetry
 export const generateBuildId = () => 'build';
 
 export default nextConfig; 

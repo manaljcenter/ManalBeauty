@@ -19,10 +19,15 @@ echo "===== Checking for critical dependencies ====="
 npm list sharp encoding @netlify/plugin-nextjs --depth=0 || true
 echo "=================================="
 
-# Clean up any previous builds
-echo "Cleaning up previous builds..."
-rm -rf .next
-rm -rf node_modules/.cache
+# Create cache directories
+echo "Setting up cache directories..."
+mkdir -p .next/cache
+mkdir -p node_modules/.cache
+
+# Clean up any previous builds but preserve cache
+echo "Cleaning up previous builds while preserving cache..."
+find .next -type f -not -path "*/cache/*" -delete || true
+find .next -type d -empty -delete || true
 
 # Install dependencies with specific flags to handle optional dependencies
 echo "Installing dependencies..."
@@ -46,6 +51,7 @@ EOL
 echo "===== Environment Variables ====="
 echo "NEXT_PUBLIC_SUPABASE_URL is set: ${NEXT_PUBLIC_SUPABASE_URL:+true}"
 echo "supabaseUrl is set: ${supabaseUrl:+true}"
+echo "NEXT_CACHE_DIR is set to: ${NEXT_CACHE_DIR:-.next/cache}"
 echo "=================================="
 
 # Build the Next.js application with increased memory limit and skip TypeScript checks
