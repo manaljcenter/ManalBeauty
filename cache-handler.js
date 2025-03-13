@@ -3,8 +3,8 @@
  * This enables persistent caching between builds
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 // Define cache directory
 const CACHE_DIR = process.env.NEXT_CACHE_DIR || path.join(process.cwd(), '.next/cache');
@@ -14,7 +14,7 @@ if (!fs.existsSync(CACHE_DIR)) {
   fs.mkdirSync(CACHE_DIR, { recursive: true });
 }
 
-module.exports = class CacheHandler {
+class CacheHandler {
   constructor(options) {
     this.options = options;
     this.cacheDirectory = CACHE_DIR;
@@ -51,4 +51,6 @@ module.exports = class CacheHandler {
       console.error(`Error writing cache for key ${key}:`, error);
     }
   }
-}; 
+}
+
+export default CacheHandler; 

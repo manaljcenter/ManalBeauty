@@ -1,4 +1,14 @@
 /** @type {import('next').NextConfig} */
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+// Convert the current file URL to a directory path
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Path to the cache handler
+const cacheHandlerPath = path.join(__dirname, 'cache-handler.js');
+
 const nextConfig = {
   // Enable React strict mode for better development experience
   reactStrictMode: true,
@@ -32,15 +42,17 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   
-  // Configure build caching and experimental features
+  // Configure experimental features
   experimental: {
     // Optimize package imports
     optimizePackageImports: ['react-icons'],
-    // Enable proper caching
-    cacheMaxMemorySize: 0, // Unlimited memory cache size
-    // Enable incremental compilation
-    incrementalCacheHandlerPath: require.resolve('./cache-handler.js'),
   },
+  
+  // External packages for server components (moved from experimental)
+  serverExternalPackages: [],
+  
+  // Output file tracing root (moved from experimental)
+  outputFileTracingRoot: path.join(__dirname),
   
   // Handle optional dependencies
   webpack: (config, { isServer }) => {
@@ -61,6 +73,14 @@ const nextConfig = {
     };
     
     return config;
+  },
+  
+  // Configure build cache
+  onDemandEntries: {
+    // Period (in ms) where the server will keep pages in the buffer
+    maxInactiveAge: 60 * 60 * 1000,
+    // Number of pages that should be kept simultaneously without being disposed
+    pagesBufferLength: 5,
   },
 };
 
