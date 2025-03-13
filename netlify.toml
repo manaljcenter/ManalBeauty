@@ -3,10 +3,13 @@
   publish = "out"
 
 [build.environment]
-  NETLIFY_NEXT_PLUGIN_SKIP = "true"
-  NEXT_USE_NETLIFY_EDGE = "true"
+  # Specify Node.js version - Next.js 15 requires Node.js 18.17.0 or newer
   NODE_VERSION = "18.17.0"
   NPM_VERSION = "9.6.7"
+  # Skip the Netlify Next.js plugin's auto-installation
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
+  # Use Netlify Edge for better performance
+  NEXT_USE_NETLIFY_EDGE = "true"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

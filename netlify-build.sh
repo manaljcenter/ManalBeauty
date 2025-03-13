@@ -1,11 +1,19 @@
 #!/bin/bash
+set -e  # Exit immediately if a command exits with a non-zero status
 
-# Print Node.js and npm versions
+# Print environment information
+echo "===== Environment Information ====="
 echo "Node version: $(node -v)"
 echo "NPM version: $(npm -v)"
+echo "Current directory: $(pwd)"
+echo "=================================="
 
 # Clean install dependencies
+echo "Installing dependencies..."
 npm ci
 
 # Build the Next.js app
-npm run build 
+echo "Building Next.js application..."
+npm run build
+
+echo "Build completed successfully!" 
