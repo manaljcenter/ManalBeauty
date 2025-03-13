@@ -34,14 +34,6 @@
 # Handle Next.js routes
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-  
-  [plugins.inputs]
-    # Enable debug mode for troubleshooting
-    debug = true
-    # Skip the automatic installation of Next.js dependencies
-    skipInstall = false
-    # Use the Next.js Runtime
-    useNextRuntime = true
 
 # Redirect all requests to Next.js
 [[redirects]]
