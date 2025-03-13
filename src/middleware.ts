@@ -11,9 +11,6 @@ const protectedClientRoutes = [
 
 // Define admin routes that require authentication
 const protectedAdminRoutes = [
-  '/manal',
-  '/manal/services',
-  '/manal/bookings',
   '/admin',
   '/admin/services',
   '/admin/bookings',
@@ -27,7 +24,6 @@ const publicClientRoutes = [
 
 // Define public admin routes (no authentication required)
 const publicAdminRoutes = [
-  '/manal/login',
   '/admin/login',
 ];
 
@@ -91,7 +87,6 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/client/:path*',
-    '/manal/:path*',
     '/admin/:path*',
   ],
 }; 
