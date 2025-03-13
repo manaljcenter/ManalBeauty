@@ -19,12 +19,18 @@ echo "===== Checking for critical dependencies ====="
 npm list sharp encoding @netlify/plugin-nextjs --depth=0 || true
 echo "=================================="
 
-# Clean install dependencies with more verbose output
+# Clean up any previous builds
+echo "Cleaning up previous builds..."
+rm -rf .next
+rm -rf node_modules/.cache
+
+# Install dependencies with specific flags to handle optional dependencies
 echo "Installing dependencies..."
-npm ci --verbose
+npm ci --no-optional --prefer-offline --no-audit --progress=false
 
-# Build the Next.js app
+# Build the Next.js application with increased memory limit
 echo "Building Next.js application..."
-npm run build
+NODE_OPTIONS="--max_old_space_size=4096" npm run build
 
-echo "Build completed successfully!" 
+echo "Build completed successfully!"
+exit $? 

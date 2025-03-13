@@ -1,28 +1,61 @@
 [build]
   command = "chmod +x netlify-build.sh && ./netlify-build.sh"
-  publish = "out"
+  publish = ".next"
 
 [build.environment]
-  # Specify Node.js version - Next.js 15 requires Node.js 18.18.0 or newer
+  NEXT_TELEMETRY_DISABLED = "1"
   NODE_VERSION = "18.18.0"
   NPM_VERSION = "9.6.7"
-  # Skip the Netlify Next.js plugin's auto-installation
-  NETLIFY_NEXT_PLUGIN_SKIP = "true"
-  # Use Netlify Edge for better performance
-  NEXT_USE_NETLIFY_EDGE = "true"
-  # Increase build memory limit
+  # Increase memory limit for Node.js
   NODE_OPTIONS = "--max_old_space_size=4096"
 
+# Use the Next.js Runtime
+[functions]
+  # This will be used for the Next.js functions
+  directory = ".netlify/functions-internal"
+  # Increase the function timeout
+  node_bundler = "esbuild"
+
+# Optimize build caching
+[build.processing]
+  skip_processing = false
+
+[build.processing.css]
+  bundle = true
+  minify = true
+
+[build.processing.js]
+  bundle = true
+  minify = true
+
+[build.processing.images]
+  compress = true
+
+# Handle Next.js routes
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+  
+  [plugins.inputs]
+    # Enable debug mode for troubleshooting
+    debug = true
+    # Skip the automatic installation of Next.js dependencies
+    skipInstall = false
+    # Use the Next.js Runtime
+    useNextRuntime = true
 
-# Handle client-side routing
+# Redirect all requests to Next.js
 [[redirects]]
   from = "/*"
-  to = "/404.html"
-  status = 404
+  to = "/.netlify/functions/___netlify-handler"
+  status = 200
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200 
+# Cache control for static assets
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable" 
