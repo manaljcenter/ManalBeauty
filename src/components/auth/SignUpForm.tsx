@@ -96,7 +96,8 @@ export default function SignUpForm() {
           data: {
             name: formData.name,
             phone: formData.phone
-          }
+          },
+          emailRedirectTo: window.location.origin
         }
       });
       
@@ -107,7 +108,8 @@ export default function SignUpForm() {
           data: {
             name: formData.name,
             phone: formData.phone
-          }
+          },
+          emailRedirectTo: window.location.origin
         }
       });
       
