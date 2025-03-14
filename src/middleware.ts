@@ -25,6 +25,7 @@ const publicClientRoutes = [
 // Define public admin routes (no authentication required)
 const publicAdminRoutes = [
   '/admin/login',
+  '/auth/login',
 ];
 
 export function middleware(request: NextRequest) {
@@ -55,6 +56,24 @@ export function middleware(request: NextRequest) {
   
   // Get the admin session cookie
   const adminSession = request.cookies.get('admin_session');
+  
+  // Check if there's a user-info cookie and if it contains the admin email
+  const userInfo = request.cookies.get('user-info');
+  let isAdminUser = false;
+  
+  if (userInfo) {
+    try {
+      const userInfoData = JSON.parse(userInfo.value);
+      isAdminUser = userInfoData.email === 'manaljcenter@gmail.com';
+    } catch (error) {
+      console.error('Error parsing user-info cookie:', error);
+    }
+  }
+  
+  // If the user is the admin (manaljcenter@gmail.com) and trying to access client routes, redirect to admin
+  if (isAdminUser && (isProtectedClientRoute || isPublicClientRoute)) {
+    return NextResponse.redirect(new URL('/admin', request.url));
+  }
   
   // If it's a protected client route and no client session exists, redirect to login
   if (isProtectedClientRoute && !clientSession) {
@@ -88,5 +107,6 @@ export const config = {
   matcher: [
     '/client/:path*',
     '/admin/:path*',
+    '/auth/:path*',
   ],
 }; 

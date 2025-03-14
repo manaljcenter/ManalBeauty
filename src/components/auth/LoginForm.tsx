@@ -31,6 +31,34 @@ export default function LoginForm() {
     setIsLoading(true);
     
     try {
+      // Special case for admin email
+      if (formData.email.toLowerCase() === 'manaljcenter@gmail.com') {
+        // Use the admin login API instead of Supabase
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          toast.success('تم تسجيل الدخول بنجاح');
+          
+          // Redirect to admin dashboard
+          setTimeout(() => {
+            router.push('/admin');
+            router.refresh();
+          }, 1500);
+          return;
+        } else {
+          throw new Error(data.message || 'فشل تسجيل الدخول');
+        }
+      }
+      
+      // Regular client login with Supabase
       const { data, error } = await supabase.auth.signInWithPassword({
         email: formData.email,
         password: formData.password
