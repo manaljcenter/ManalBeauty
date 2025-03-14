@@ -1,11 +1,33 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import ClientLayout from '@/components/layouts/ClientLayout';
+import ClientUpcomingAppointments from '@/components/client/ClientUpcomingAppointments';
+import ClientRecentActivity from '@/components/client/ClientRecentActivity';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'لوحة التحكم | منال بيوتي',
-  description: 'لوحة تحكم العميل لإدارة الحجوزات وخطط العلاج',
+  description: 'لوحة تحكم العميل لإدارة الحجوزات وخطط العلاج والتقارير',
 };
+
+// Loading fallback components
+function AppointmentsLoading() {
+  return (
+    <div className="animate-pulse">
+      <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
+      <div className="h-64 bg-gray-200 rounded"></div>
+    </div>
+  );
+}
+
+function ActivityLoading() {
+  return (
+    <div className="animate-pulse">
+      <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
+      <div className="h-32 bg-gray-200 rounded"></div>
+    </div>
+  );
+}
 
 export default function ClientDashboardPage() {
   return (
@@ -34,7 +56,19 @@ export default function ClientDashboardPage() {
                 href="/client/treatments" 
                 className="block w-full text-center bg-white text-pink-600 border border-pink-600 py-2 px-4 rounded-md hover:bg-pink-50 transition-colors"
               >
-                عرض خطط العلاج
+                خطط العلاج
+              </Link>
+              <Link 
+                href="/client/reports" 
+                className="block w-full text-center bg-white text-pink-600 border border-pink-600 py-2 px-4 rounded-md hover:bg-pink-50 transition-colors"
+              >
+                التقارير
+              </Link>
+              <Link 
+                href="/client/profile" 
+                className="block w-full text-center bg-white text-pink-600 border border-pink-600 py-2 px-4 rounded-md hover:bg-pink-50 transition-colors"
+              >
+                الملف الشخصي
               </Link>
             </div>
           </div>
@@ -42,62 +76,18 @@ export default function ClientDashboardPage() {
           {/* Recent Activity */}
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-4 text-pink-600">النشاط الأخير</h2>
-            <div className="space-y-4">
-              <div className="border-b pb-4">
-                <p className="text-gray-500 text-sm">لا توجد أنشطة حديثة</p>
-                <p className="text-gray-600 mt-2">قم بحجز موعد جديد أو استعرض خطط العلاج الخاصة بك</p>
-              </div>
-            </div>
+            <Suspense fallback={<ActivityLoading />}>
+              <ClientRecentActivity />
+            </Suspense>
           </div>
         </div>
         
         {/* Upcoming Appointments */}
         <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4 text-pink-600">المواعيد القادمة</h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    الخدمة
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    التاريخ
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    الوقت
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    الحالة
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    الإجراءات
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <div className="text-sm text-gray-900">لا توجد مواعيد قادمة</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <div className="text-sm text-gray-500">-</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <div className="text-sm text-gray-500">-</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <div className="text-sm text-gray-500">-</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <Link href="/client/bookings/new" className="text-pink-600 hover:text-pink-900">
-                      حجز موعد
-                    </Link>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <Suspense fallback={<AppointmentsLoading />}>
+            <ClientUpcomingAppointments />
+          </Suspense>
         </div>
       </div>
     </ClientLayout>
