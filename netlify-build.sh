@@ -14,6 +14,11 @@ if [ ! -f package.json ]; then
   exit 1
 fi
 
+# Explicitly install the Netlify Next.js plugin
+echo "===== Explicitly installing Netlify Next.js plugin ====="
+npm install @netlify/plugin-nextjs --save
+echo "=================================="
+
 # List installed packages for debugging
 echo "===== Checking for critical dependencies ====="
 npm list sharp encoding @netlify/plugin-nextjs --depth=0 || true
@@ -67,6 +72,14 @@ echo "SUPABASE_SERVICE_ROLE_KEY is set: ${SUPABASE_SERVICE_ROLE_KEY:+true}"
 echo "supabaseUrl is set: ${supabaseUrl:+true}"
 echo "supabaseAnonKey is set: ${supabaseAnonKey:+true}"
 echo "NEXT_CACHE_DIR is set to: ${NEXT_CACHE_DIR:-.next/cache}"
+echo "=================================="
+
+# Verify Netlify plugin is installed
+echo "===== Verifying Netlify plugin installation ====="
+if [ ! -f "node_modules/@netlify/plugin-nextjs/package.json" ]; then
+  echo "Netlify plugin not found in node_modules, installing again..."
+  npm install @netlify/plugin-nextjs --save
+fi
 echo "=================================="
 
 # Build the Next.js application with increased memory limit and skip TypeScript checks
