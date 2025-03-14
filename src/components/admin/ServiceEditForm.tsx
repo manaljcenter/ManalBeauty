@@ -56,6 +56,29 @@ export default function ServiceEditForm({ service }: ServiceEditFormProps) {
     const file = e.target.files?.[0];
     if (!file) return;
     
+    // Reset previous errors
+    setError(null);
+    
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+    if (!allowedTypes.includes(file.type)) {
+      setError('نوع الملف غير مدعوم. يرجى تحميل صورة بصيغة JPEG أو PNG أو WebP');
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      return;
+    }
+    
+    // Validate file size (max 5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      setError('حجم الملف كبير جدًا. الحد الأقصى هو 5 ميجابايت');
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      return;
+    }
+    
     // Create a preview
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -65,7 +88,6 @@ export default function ServiceEditForm({ service }: ServiceEditFormProps) {
     
     // Upload the file
     setIsUploading(true);
-    setError(null);
     
     try {
       const formData = new FormData();
@@ -86,6 +108,13 @@ export default function ServiceEditForm({ service }: ServiceEditFormProps) {
         ...prev,
         image: data.url
       }));
+      
+      setSuccess('تم رفع الصورة بنجاح');
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setSuccess(null);
+      }, 3000);
     } catch (err: any) {
       console.error('Error uploading image:', err);
       setError(err.message || 'حدث خطأ أثناء تحميل الصورة');

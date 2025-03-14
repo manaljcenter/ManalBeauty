@@ -4,6 +4,15 @@ import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if Supabase environment variables are set
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      console.error('Missing Supabase environment variables');
+      return NextResponse.json(
+        { message: 'خطأ في تكوين الخادم. يرجى الاتصال بمسؤول النظام.' },
+        { status: 500 }
+      );
+    }
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
     
@@ -40,33 +49,45 @@ export async function POST(request: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = new Uint8Array(arrayBuffer);
     
-    // Upload to Supabase Storage
-    const supabase = createClient();
-    const { error } = await supabase.storage
-      .from('services')
-      .upload(`images/${fileName}`, buffer, {
-        contentType: file.type,
-        cacheControl: '3600',
-        upsert: true
-      });
+    console.log(`Uploading file: ${fileName}, type: ${file.type}, size: ${file.size} bytes`);
     
-    if (error) {
-      console.error('Error uploading file:', error);
+    // Upload to Supabase Storage
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.storage
+        .from('services')
+        .upload(`images/${fileName}`, buffer, {
+          contentType: file.type,
+          cacheControl: '3600',
+          upsert: true
+        });
+      
+      if (error) {
+        console.error('Error uploading file to Supabase storage:', error);
+        return NextResponse.json(
+          { message: `فشل في رفع الملف: ${error.message}` },
+          { status: 500 }
+        );
+      }
+      
+      // Get the public URL
+      const { data: publicUrlData } = supabase.storage
+        .from('services')
+        .getPublicUrl(`images/${fileName}`);
+      
+      console.log(`File uploaded successfully. Public URL: ${publicUrlData.publicUrl}`);
+      
+      return NextResponse.json({
+        message: 'تم رفع الملف بنجاح',
+        url: publicUrlData.publicUrl
+      });
+    } catch (storageError) {
+      console.error('Unexpected error during Supabase storage operation:', storageError);
       return NextResponse.json(
-        { message: 'فشل في رفع الملف' },
+        { message: 'حدث خطأ غير متوقع أثناء تخزين الملف' },
         { status: 500 }
       );
     }
-    
-    // Get the public URL
-    const { data: publicUrlData } = supabase.storage
-      .from('services')
-      .getPublicUrl(`images/${fileName}`);
-    
-    return NextResponse.json({
-      message: 'تم رفع الملف بنجاح',
-      url: publicUrlData.publicUrl
-    });
   } catch (error) {
     console.error('Error handling file upload:', error);
     return NextResponse.json(

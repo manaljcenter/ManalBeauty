@@ -50,16 +50,22 @@ NODE_ENV=production
 NEXT_TELEMETRY_DISABLED=1
 BUILD_DIR=.next
 NEXT_CACHE_DIR=.next/cache
+BASE_URL=${BASE_URL:-https://wwwjamal.ly}
 NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL:-https://yvbwzbcxogwxvbymlmsj.supabase.co}
 NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2Ynd6YmN4b2d3eHZieW1sbXNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE3NDAwMjAsImV4cCI6MjA1NzMxNjAyMH0._GUA9qK5OmPe-DN_89UqHPncW7JcN36rcFjcjoNdVQg}
+SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2Ynd6YmN4b2d3eHZieW1sbXNqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MTc0MDAyMCwiZXhwIjoyMDU3MzE2MDIwfQ.ytMMnaMm7ua9pHlcG2eCIz9VKaovgDi2WDZaniWfrgU}
 supabaseUrl=${supabaseUrl:-https://yvbwzbcxogwxvbymlmsj.supabase.co}
 supabaseAnonKey=${supabaseAnonKey:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2Ynd6YmN4b2d3eHZieW1sbXNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE3NDAwMjAsImV4cCI6MjA1NzMxNjAyMH0._GUA9qK5OmPe-DN_89UqHPncW7JcN36rcFjcjoNdVQg}
 EOL
 
 # Print environment variables for debugging (without sensitive values)
 echo "===== Environment Variables ====="
+echo "BASE_URL is set: ${BASE_URL:+true}"
 echo "NEXT_PUBLIC_SUPABASE_URL is set: ${NEXT_PUBLIC_SUPABASE_URL:+true}"
+echo "NEXT_PUBLIC_SUPABASE_ANON_KEY is set: ${NEXT_PUBLIC_SUPABASE_ANON_KEY:+true}"
+echo "SUPABASE_SERVICE_ROLE_KEY is set: ${SUPABASE_SERVICE_ROLE_KEY:+true}"
 echo "supabaseUrl is set: ${supabaseUrl:+true}"
+echo "supabaseAnonKey is set: ${supabaseAnonKey:+true}"
 echo "NEXT_CACHE_DIR is set to: ${NEXT_CACHE_DIR:-.next/cache}"
 echo "=================================="
 
