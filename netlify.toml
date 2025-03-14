@@ -12,6 +12,9 @@
   # Add Supabase environment variables
   NEXT_PUBLIC_SUPABASE_URL = "https://yvbwzbcxogwxvbymlmsj.supabase.co"
   NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2Ynd6YmN4b2d3eHZieW1sbXNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE3NDAwMjAsImV4cCI6MjA1NzMxNjAyMH0._GUA9qK5OmPe-DN_89UqHPncW7JcN36rcFjcjoNdVQg"
+  SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2Ynd6YmN4b2d3eHZieW1sbXNqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MTc0MDAyMCwiZXhwIjoyMDU3MzE2MDIwfQ.ytMMnaMm7ua9pHlcG2eCIz9VKaovgDi2WDZaniWfrgU"
+  # Base URL for the site
+  BASE_URL = "https://wwwjamal.ly"
   # Add the exact variable names expected by the build process
   supabaseUrl = "https://yvbwzbcxogwxvbymlmsj.supabase.co"
   supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2Ynd6YmN4b2d3eHZieW1sbXNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE3NDAwMjAsImV4cCI6MjA1NzMxNjAyMH0._GUA9qK5OmPe-DN_89UqHPncW7JcN36rcFjcjoNdVQg"

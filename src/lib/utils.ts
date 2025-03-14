@@ -5,7 +5,7 @@
 export const getURL = () => {
   let url =
     process?.env?.BASE_URL ?? // Set this to your site URL in production env.
-    'https://wwwjamal.ly';
+    'https://www.jamal.ly';
   
   // Make sure to include `https://` when not localhost.
   url = url.startsWith('http') ? url : `https://${url}`;
