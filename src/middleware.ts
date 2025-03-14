@@ -51,7 +51,7 @@ export function middleware(request: NextRequest) {
   );
   
   // Get the client session cookie
-  const clientSession = request.cookies.get('client_session');
+  const clientSession = request.cookies.get('client-session');
   
   // Get the admin session cookie
   const adminSession = request.cookies.get('admin_session');

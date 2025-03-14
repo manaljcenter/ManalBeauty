@@ -1,12 +1,15 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { toast, Toaster } from 'react-hot-toast';
 import { createClient } from '@/lib/supabase/client';
 
 export default function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams ? searchParams.get('redirect') || '/client/profile' : '/client/profile';
+  
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -39,9 +42,9 @@ export default function LoginForm() {
       
       toast.success('تم تسجيل الدخول بنجاح');
       
-      // Redirect to client profile page after successful login
+      // Redirect to the specified redirect path or client profile page after successful login
       setTimeout(() => {
-        router.push('/client/profile');
+        router.push(redirectPath);
         router.refresh();
       }, 1500);
     } catch (error: any) {
