@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { getAllBookings } from '@/lib/services/bookingService';
+import AdminDashboardClient from '@/components/admin/AdminDashboardClient';
 
 export const metadata: Metadata = {
   title: 'لوحة التحكم | منال للتجميل',
@@ -22,6 +23,7 @@ export default async function AdminDashboard() {
   
   return (
     <main className="container mx-auto py-12 px-4">
+      <AdminDashboardClient />
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-primary">لوحة التحكم</h1>

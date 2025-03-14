@@ -1,11 +1,13 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, FormEvent, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { toast, Toaster } from 'react-hot-toast';
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams ? searchParams.get('redirect') || '/admin' : '/admin';
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -34,8 +36,13 @@ export default function LoginPage() {
 
       if (response.ok) {
         toast.success('تم تسجيل الدخول بنجاح');
-        // Redirect to admin dashboard
-        router.push('/admin');
+        
+        // Wait a moment for the toast to be visible
+        setTimeout(() => {
+          // Redirect to the specified path or admin dashboard
+          router.push(redirectPath);
+          router.refresh(); // Force a refresh to ensure the page reloads with the new session
+        }, 1000);
       } else {
         toast.error(data.message || 'فشل تسجيل الدخول');
       }
