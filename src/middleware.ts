@@ -38,17 +38,17 @@ export async function middleware(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name) {
+        get: (name) => {
           return request.cookies.get(name)?.value;
         },
-        set(name, value, options) {
+        set: (name, value, options) => {
           // This is used for setting cookies during redirects
-          request.cookies.set({
-            name,
-            value,
-            ...options,
-          });
-          
+          // request.cookies.set({
+          //   name,
+          //   value,
+          //   ...options,
+          // });
+
           // Update headers of the response
           const response = NextResponse.next({
             request: {
@@ -64,12 +64,12 @@ export async function middleware(request: NextRequest) {
         },
         remove(name, options) {
           // This is used for removing cookies during redirects
-          request.cookies.set({
-            name,
-            value: '',
-            ...options,
-          });
-          
+          // request.cookies.set({
+          //   name,
+          //   value: '',
+          //   ...options,
+          // });
+
           // Update headers of the response
           const response = NextResponse.next({
             request: {
