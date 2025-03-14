@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, FormEvent, useEffect } from 'react';
+import { useState, FormEvent, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast, Toaster } from 'react-hot-toast';
 
-export default function LoginPage() {
+// Client component that uses useSearchParams
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectPath = searchParams ? searchParams.get('redirect') || '/admin' : '/admin';
@@ -55,6 +56,69 @@ export default function LoginPage() {
   };
 
   return (
+    <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+      <div className="rounded-md shadow-sm -space-y-px">
+        <div>
+          <label htmlFor="email" className="sr-only">البريد الإلكتروني</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            required
+            value={formData.email}
+            onChange={handleChange}
+            className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+            placeholder="البريد الإلكتروني"
+            dir="ltr"
+          />
+        </div>
+        <div>
+          <label htmlFor="password" className="sr-only">كلمة المرور</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autoComplete="current-password"
+            required
+            value={formData.password}
+            onChange={handleChange}
+            className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+            placeholder="كلمة المرور"
+            dir="ltr"
+          />
+        </div>
+      </div>
+
+      <div>
+        <button
+          type="submit"
+          disabled={loading}
+          className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+        >
+          {loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
+        </button>
+      </div>
+    </form>
+  );
+}
+
+// Loading fallback component
+function LoginFormFallback() {
+  return (
+    <div className="mt-8 space-y-6">
+      <div className="rounded-md shadow-sm -space-y-px">
+        <div className="h-10 bg-gray-200 rounded-t-md animate-pulse"></div>
+        <div className="h-10 bg-gray-200 rounded-b-md animate-pulse"></div>
+      </div>
+      <div className="h-10 bg-gray-200 rounded-md animate-pulse"></div>
+    </div>
+  );
+}
+
+// Main page component
+export default function LoginPage() {
+  return (
     <main className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <Toaster position="top-center" />
       
@@ -64,50 +128,9 @@ export default function LoginPage() {
           <h2 className="mt-6 text-center text-2xl font-bold text-gray-900">تسجيل الدخول للوحة التحكم</h2>
         </div>
         
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="email" className="sr-only">البريد الإلكتروني</label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
-                placeholder="البريد الإلكتروني"
-                dir="ltr"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">كلمة المرور</label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                value={formData.password}
-                onChange={handleChange}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
-                placeholder="كلمة المرور"
-                dir="ltr"
-              />
-            </div>
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-            >
-              {loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
-            </button>
-          </div>
-        </form>
+        <Suspense fallback={<LoginFormFallback />}>
+          <LoginForm />
+        </Suspense>
       </div>
     </main>
   );
