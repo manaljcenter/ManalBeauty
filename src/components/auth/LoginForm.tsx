@@ -39,9 +39,9 @@ export default function LoginForm() {
       
       toast.success('تم تسجيل الدخول بنجاح');
       
-      // Redirect to home page after successful login
+      // Redirect to client profile page after successful login
       setTimeout(() => {
-        router.push('/');
+        router.push('/client/profile');
         router.refresh();
       }, 1500);
     } catch (error: any) {

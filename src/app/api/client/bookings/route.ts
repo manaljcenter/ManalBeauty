@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
     
     // Get booking data from request
     const body = await request.json();
-    const { service_id, date, time, notes } = body;
+    const { service_id, date, time, notes, discount_code, final_price } = body;
     
     // Validate required fields
     if (!service_id || !date || !time) {
@@ -93,19 +93,44 @@ export async function POST(request: NextRequest) {
       );
     }
     
+    // Get service details to calculate price if final_price is not provided
+    let bookingPrice = 0;
+    
+    if (final_price !== undefined) {
+      bookingPrice = final_price;
+    } else {
+      const { data: serviceData, error: serviceError } = await supabase
+        .from('services')
+        .select('price')
+        .eq('id', service_id)
+        .single();
+      
+      if (serviceError) {
+        console.error('Error fetching service details:', serviceError);
+        return NextResponse.json(
+          { message: 'حدث خطأ أثناء جلب بيانات الخدمة' },
+          { status: 500 }
+        );
+      }
+      
+      bookingPrice = serviceData.price;
+    }
+    
     // Create booking
     const { data: bookingData, error: bookingError } = await supabase
       .from('bookings')
       .insert({
         client_id: clientId,
         client_name: clientName,
-        client_phone: clientData.phone,
         client_email: clientData.email,
+        client_phone: clientData.phone,
         service_id,
         date,
         time,
-        notes: notes || '',
-        status: 'pending'
+        notes,
+        status: 'pending',
+        discount_code: discount_code || null,
+        price: bookingPrice
       })
       .select()
       .single();

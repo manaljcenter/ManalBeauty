@@ -3,6 +3,7 @@ import ClientProfileDetails from '@/components/client/ClientProfileDetails';
 import ClientTreatmentPlans from '@/components/client/ClientTreatmentPlans';
 import ClientBookingsList from '@/components/client/ClientBookingsList';
 import ClientLayout from '@/components/client/ClientLayout';
+import ClientProfileBookingForm from '@/components/client/ClientProfileBookingForm';
 
 export const metadata: Metadata = {
   title: 'الملف الشخصي | منال بيوتي',
@@ -19,6 +20,11 @@ export default function ClientProfilePage() {
           <div className="md:col-span-1">
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
               <ClientProfileDetails />
+            </div>
+            
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-semibold mb-4 text-pink-600">حجز جديد</h2>
+              <ClientProfileBookingForm />
             </div>
           </div>
           
