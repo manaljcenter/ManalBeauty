@@ -8,7 +8,7 @@ import { createClient } from '@/utils/supabase/client';
 export default function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectPath = searchParams ? searchParams.get('redirect') || '/client/profile' : '/client/profile';
+  const redirectPath = searchParams ? searchParams.get('redirect') || '/client/dashboard' : '/client/dashboard';
   
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -43,9 +43,27 @@ export default function LoginForm() {
       
       toast.success('تم تسجيل الدخول بنجاح');
       
-      // Redirect to jamal.ly/client after successful login
+      // Create a client session cookie
+      const response = await fetch('/api/client/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password
+        }),
+      });
+      
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'فشل في إنشاء جلسة العميل');
+      }
+      
+      // Redirect to client dashboard after successful login
       setTimeout(() => {
-        window.location.href = 'https://jamal.ly/client';
+        router.push('/client/dashboard');
+        router.refresh(); // Force a refresh to ensure the page reloads with the new session
       }, 1500);
     } catch (error: any) {
       console.error('Login error:', error);

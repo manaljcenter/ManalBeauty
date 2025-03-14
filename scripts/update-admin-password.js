@@ -38,18 +38,17 @@ async function main() {
       role: user.role
     });
     
-    // Hash the new password
-    const newPassword = 'Manal@2019';
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    console.log('Generated new password hash');
+    // Generate a new password hash
+    const password = 'admin123';
+    const hashedPassword = await bcrypt.hash(password, 10);
     
-    // Update the admin user's password
-    const { data: updatedUser, error: updateError } = await supabase
+    console.log('New password hash generated:', hashedPassword);
+    
+    // Update the user's password in the database
+    const { error: updateError } = await supabase
       .from('users')
       .update({ password: hashedPassword })
-      .eq('id', user.id)
-      .select()
-      .single();
+      .eq('id', user.id);
     
     if (updateError) {
       console.error('Error updating admin password:', updateError);
@@ -57,9 +56,22 @@ async function main() {
     }
     
     console.log('Admin password updated successfully!');
-    console.log('You can now log in with:');
-    console.log('Email: admin@manalbeauty.com');
-    console.log('Password: Manal@2019');
+    
+    // Verify the new password
+    const { data: updatedUser, error: fetchError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+    
+    if (fetchError) {
+      console.error('Error fetching updated user:', fetchError);
+      process.exit(1);
+    }
+    
+    const isPasswordValid = await bcrypt.compare(password, updatedUser.password);
+    console.log('Password verification after update:', isPasswordValid);
+    
   } catch (error) {
     console.error('Unexpected error:', error);
     process.exit(1);

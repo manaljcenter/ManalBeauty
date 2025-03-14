@@ -4,7 +4,7 @@ import { getClientById, updateClient } from '@/lib/services/clientService';
 export async function GET(request: NextRequest) {
   try {
     // Get client ID from session cookie
-    const clientSession = request.cookies.get('client_session')?.value;
+    const clientSession = request.cookies.get('client-session')?.value;
     
     if (!clientSession) {
       return NextResponse.json(
@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     }
     
     const session = JSON.parse(clientSession);
-    const clientId = session.id;
+    const clientId = session.clientId;
     
     // Get client profile
     const client = await getClientById(clientId);
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     // Get client session from cookie
-    const sessionCookie = request.cookies.get('client_session')?.value;
+    const sessionCookie = request.cookies.get('client-session')?.value;
     
     if (!sessionCookie) {
       return NextResponse.json(
@@ -49,7 +49,7 @@ export async function PUT(request: NextRequest) {
     }
     
     const session = JSON.parse(sessionCookie);
-    const clientId = session.id;
+    const clientId = session.clientId;
     
     // Get update data
     const body = await request.json();
