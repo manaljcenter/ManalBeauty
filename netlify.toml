@@ -28,7 +28,7 @@
   # Set a longer timeout for functions
   included_files = [".next/standalone/**", ".next/static/**"]
   # Increase function timeout
-  external_node_modules = ["sharp"]
+  external_node_modules = ["sharp", "@supabase/ssr"]
 
 # Optimize build caching
 [build.processing]

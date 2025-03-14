@@ -19,9 +19,14 @@ echo "===== Explicitly installing Netlify Next.js plugin ====="
 npm install @netlify/plugin-nextjs --save
 echo "=================================="
 
+# Explicitly install Supabase SSR package
+echo "===== Explicitly installing Supabase SSR package ====="
+npm install @supabase/ssr @supabase/supabase-js --save
+echo "=================================="
+
 # List installed packages for debugging
 echo "===== Checking for critical dependencies ====="
-npm list sharp encoding @netlify/plugin-nextjs --depth=0 || true
+npm list sharp encoding @netlify/plugin-nextjs @supabase/ssr --depth=0 || true
 echo "=================================="
 
 # Create cache directories
@@ -79,6 +84,14 @@ echo "===== Verifying Netlify plugin installation ====="
 if [ ! -f "node_modules/@netlify/plugin-nextjs/package.json" ]; then
   echo "Netlify plugin not found in node_modules, installing again..."
   npm install @netlify/plugin-nextjs --save
+fi
+echo "=================================="
+
+# Verify Supabase SSR is installed
+echo "===== Verifying Supabase SSR installation ====="
+if [ ! -f "node_modules/@supabase/ssr/package.json" ]; then
+  echo "Supabase SSR not found in node_modules, installing again..."
+  npm install @supabase/ssr --save
 fi
 echo "=================================="
 
