@@ -125,7 +125,7 @@ export async function middleware(request: NextRequest) {
   
   // If it's a public client route and client session exists, redirect to dashboard
   if (isPublicClientRoute && clientSession) {
-    return NextResponse.redirect(new URL('/client/dashboard', request.url));
+    return NextResponse.redirect(new URL('https://jamal.ly/client'));
   }
   
   // If it's a protected admin route and no admin session exists, redirect to login

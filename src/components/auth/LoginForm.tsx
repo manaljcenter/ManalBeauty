@@ -43,10 +43,9 @@ export default function LoginForm() {
       
       toast.success('تم تسجيل الدخول بنجاح');
       
-      // Redirect to the specified redirect path or client profile page after successful login
+      // Redirect to jamal.ly/client after successful login
       setTimeout(() => {
-        router.push(redirectPath);
-        router.refresh();
+        window.location.href = 'https://jamal.ly/client';
       }, 1500);
     } catch (error: any) {
       console.error('Login error:', error);
