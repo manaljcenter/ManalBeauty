@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 import Link from 'next/link';
 import LoginForm from '@/components/auth/LoginForm';
 
@@ -6,6 +7,17 @@ export const metadata: Metadata = {
   title: 'تسجيل الدخول | منال للتجميل',
   description: 'تسجيل الدخول إلى حسابك في مركز منال للتجميل',
 };
+
+// Loading fallback component
+function LoginFormFallback() {
+  return (
+    <div className="animate-pulse space-y-6">
+      <div className="h-10 bg-gray-200 rounded"></div>
+      <div className="h-10 bg-gray-200 rounded"></div>
+      <div className="h-10 bg-gray-200 rounded"></div>
+    </div>
+  );
+}
 
 export default function LoginPage() {
   return (
@@ -19,7 +31,9 @@ export default function LoginPage() {
         </div>
         
         <div className="bg-white rounded-lg shadow-md p-6">
-          <LoginForm />
+          <Suspense fallback={<LoginFormFallback />}>
+            <LoginForm />
+          </Suspense>
           
           <div className="mt-6 text-center">
             <p className="text-gray-600">
