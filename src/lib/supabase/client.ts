@@ -4,7 +4,7 @@ import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 export const createClient = () => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  const siteUrl = process.env.BASE_URL || 'https://wwwjamal.ly';
+  const siteUrl = process.env.BASE_URL || 'https://www.jamal.ly';
 
   if (!supabaseUrl || !supabaseAnonKey) {
     throw new Error('Missing Supabase URL or Anon Key');
