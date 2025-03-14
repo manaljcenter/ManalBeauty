@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createServerClient } from '@supabase/ssr';
 
 // Define client routes that require authentication
 const protectedClientRoutes = [
@@ -28,8 +29,63 @@ const publicAdminRoutes = [
   '/auth/login',
 ];
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  
+  // Create a Supabase client for auth
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name) {
+          return request.cookies.get(name)?.value;
+        },
+        set(name, value, options) {
+          // This is used for setting cookies during redirects
+          request.cookies.set({
+            name,
+            value,
+            ...options,
+          });
+          
+          // Update headers of the response
+          const response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          });
+          response.cookies.set({
+            name,
+            value,
+            ...options,
+          });
+          return response;
+        },
+        remove(name, options) {
+          // This is used for removing cookies during redirects
+          request.cookies.set({
+            name,
+            value: '',
+            ...options,
+          });
+          
+          // Update headers of the response
+          const response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          });
+          response.cookies.set({
+            name,
+            value: '',
+            ...options,
+          });
+          return response;
+        },
+      },
+    }
+  );
   
   // Check if the route is a protected client route
   const isProtectedClientRoute = protectedClientRoutes.some(route => 
@@ -50,6 +106,9 @@ export function middleware(request: NextRequest) {
   const isPublicAdminRoute = publicAdminRoutes.some(route => 
     pathname === route || pathname.startsWith(`${route}/`)
   );
+  
+  // Get the session
+  const { data: { session } } = await supabase.auth.getSession();
   
   // Get the client session cookie
   const clientSession = request.cookies.get('client-session');
