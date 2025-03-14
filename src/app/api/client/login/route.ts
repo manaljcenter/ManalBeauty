@@ -36,9 +36,9 @@ export async function POST(request: NextRequest) {
     
     // Set session cookie in the response
     response.cookies.set({
-      name: 'client_session',
+      name: 'client-session',
       value: JSON.stringify({
-        id: client.id,
+        clientId: client.id,
         email: client.email,
         name: client.name
       }),

@@ -5,9 +5,9 @@ import { createClient } from '@/lib/supabase/server';
 export async function GET(request: NextRequest) {
   try {
     // Get client session
-    const clientSessionCookie = request.cookies.get('client_session')?.value;
+    const sessionCookie = request.cookies.get('client-session');
     
-    if (!clientSessionCookie) {
+    if (!sessionCookie) {
       return NextResponse.json(
         { message: 'غير مصرح به' },
         { status: 401 }
@@ -15,8 +15,8 @@ export async function GET(request: NextRequest) {
     }
     
     // Parse client session
-    const clientSession = JSON.parse(clientSessionCookie);
-    const clientId = clientSession.id;
+    const session = JSON.parse(sessionCookie.value);
+    const clientId = session.clientId;
     
     // Get bookings from Supabase
     const supabase = createClient();
@@ -51,9 +51,9 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Get client session
-    const clientSessionCookie = request.cookies.get('client_session')?.value;
+    const sessionCookie = request.cookies.get('client-session');
     
-    if (!clientSessionCookie) {
+    if (!sessionCookie) {
       return NextResponse.json(
         { message: 'غير مصرح به' },
         { status: 401 }
@@ -61,9 +61,9 @@ export async function POST(request: NextRequest) {
     }
     
     // Parse client session
-    const clientSession = JSON.parse(clientSessionCookie);
-    const clientId = clientSession.id;
-    const clientName = clientSession.name;
+    const session = JSON.parse(sessionCookie.value);
+    const clientId = session.clientId;
+    const clientName = session.name;
     
     // Get client details
     const supabase = createClient();
