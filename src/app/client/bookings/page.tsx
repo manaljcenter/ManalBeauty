@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import ClientBookingsList from '@/components/client/ClientBookingsList';
-import ClientLayout from '@/components/layouts/ClientLayout';
+import ClientLayout from '@/components/client/ClientLayout';
 
 export const metadata: Metadata = {
   title: 'الحجوزات | منال بيوتي',
