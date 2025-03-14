@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 
 interface ClientLayoutProps {
@@ -10,12 +10,21 @@ interface ClientLayoutProps {
 
 export default function ClientLayout({ children }: ClientLayoutProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [clientName, setClientName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Skip authentication check for login and register pages
+  const isAuthPage = pathname === '/client/login' || pathname === '/client/register';
+
   useEffect(() => {
-    // Check if client is logged in
+    // Check if client is logged in (skip for auth pages)
     const checkAuth = async () => {
+      if (isAuthPage) {
+        setLoading(false);
+        return;
+      }
+
       try {
         const response = await fetch('/api/client/me');
         if (!response.ok) {
@@ -33,7 +42,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
     };
     
     checkAuth();
-  }, [router]);
+  }, [router, isAuthPage, pathname]);
 
   const handleLogout = async () => {
     try {
@@ -53,6 +62,11 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
         </div>
       </div>
     );
+  }
+
+  // For auth pages, just render the children without the layout
+  if (isAuthPage) {
+    return <>{children}</>;
   }
 
   return (
