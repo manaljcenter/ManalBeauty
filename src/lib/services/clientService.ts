@@ -1,5 +1,5 @@
-import { createClient } from '@/lib/supabase/server';
-import bcrypt from 'bcryptjs';
+import { createClient as createSupabaseClient } from '@/lib/supabase/server';
+import bcrypt from 'bcrypt';
 
 export interface Client {
   id: string;
@@ -16,7 +16,7 @@ export interface Client {
  */
 export async function getClientById(id: string): Promise<Client | null> {
   try {
-    const supabase = createClient();
+    const supabase = createSupabaseClient();
     const { data, error } = await supabase
       .from('clients')
       .select('id, name, email, phone, created_at, updated_at')
@@ -40,19 +40,30 @@ export async function getClientById(id: string): Promise<Client | null> {
  */
 export async function getClientByEmail(email: string): Promise<Client | null> {
   try {
-    const supabase = createClient();
+    const supabase = createSupabaseClient();
+    
+    // First, try to get all clients with this email
     const { data, error } = await supabase
       .from('clients')
       .select('*')
-      .eq('email', email)
-      .single();
+      .eq('email', email);
 
     if (error) {
       console.error('Error fetching client by email:', error);
       return null;
     }
-
-    return data;
+    
+    if (!data || data.length === 0) {
+      console.log('No client found with email:', email);
+      return null;
+    }
+    
+    if (data.length > 1) {
+      console.log(`Warning: Found ${data.length} clients with email ${email}. Using the first one.`);
+    }
+    
+    // Return the first client
+    return data[0];
   } catch (error) {
     console.error('Unexpected error in getClientByEmail:', error);
     return null;
@@ -64,16 +75,22 @@ export async function getClientByEmail(email: string): Promise<Client | null> {
  */
 export async function createClient(client: Omit<Client, 'id' | 'created_at' | 'updated_at'>): Promise<Client | null> {
   try {
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(client.password!, 10);
+    // Create client data object
+    const clientData: any = {
+      name: client.name,
+      email: client.email,
+      phone: client.phone || '',
+    };
     
-    const supabase = createClient();
+    // Hash the password if provided
+    if (client.password) {
+      clientData.password = await bcrypt.hash(client.password, 10);
+    }
+    
+    const supabase = createSupabaseClient();
     const { data, error } = await supabase
       .from('clients')
-      .insert({
-        ...client,
-        password: hashedPassword
-      })
+      .insert(clientData)
       .select()
       .single();
 
@@ -94,15 +111,18 @@ export async function createClient(client: Omit<Client, 'id' | 'created_at' | 'u
  */
 export async function updateClient(id: string, client: Partial<Omit<Client, 'id' | 'created_at' | 'updated_at'>>): Promise<Client | null> {
   try {
+    // Create update data object
+    const updateData: any = { ...client };
+    
     // If password is being updated, hash it
     if (client.password) {
-      client.password = await bcrypt.hash(client.password, 10);
+      updateData.password = await bcrypt.hash(client.password, 10);
     }
     
-    const supabase = createClient();
+    const supabase = createSupabaseClient();
     const { data, error } = await supabase
       .from('clients')
-      .update(client)
+      .update(updateData)
       .eq('id', id)
       .select('id, name, email, phone, created_at, updated_at')
       .single();
@@ -121,7 +141,7 @@ export async function updateClient(id: string, client: Partial<Omit<Client, 'id'
 
 export async function deleteClient(id: string): Promise<boolean> {
   try {
-    const supabase = createClient();
+    const supabase = createSupabaseClient();
     const { error } = await supabase
       .from('clients')
       .delete()
@@ -155,7 +175,7 @@ export async function verifyClientPassword(client: Client, password: string): Pr
 
 export async function getAllClients(): Promise<Client[]> {
   try {
-    const supabase = createClient();
+    const supabase = createSupabaseClient();
     const { data, error } = await supabase
       .from('clients')
       .select('id, name, email, phone, created_at, updated_at')

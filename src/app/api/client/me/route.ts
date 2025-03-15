@@ -14,7 +14,25 @@ export async function GET(request: NextRequest) {
     }
     
     // Parse session
-    const session = JSON.parse(sessionCookie.value);
+    let session;
+    try {
+      session = JSON.parse(sessionCookie.value);
+    } catch (error) {
+      console.error('Error parsing session cookie:', error);
+      return NextResponse.json(
+        { message: 'جلسة غير صالحة' },
+        { status: 401 }
+      );
+    }
+    
+    // Check if clientId exists in session
+    if (!session || !session.clientId) {
+      console.error('Invalid session structure:', session);
+      return NextResponse.json(
+        { message: 'بنية الجلسة غير صالحة' },
+        { status: 401 }
+      );
+    }
     
     // Get client by ID
     const client = await getClientById(session.clientId);

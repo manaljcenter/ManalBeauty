@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast, Toaster } from 'react-hot-toast';
-import { createClient } from '@/utils/supabase/client';
 
 export default function LoginForm() {
   const router = useRouter();
@@ -15,8 +14,6 @@ export default function LoginForm() {
     email: '',
     password: ''
   });
-  
-  const supabase = createClient();
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -31,19 +28,6 @@ export default function LoginForm() {
     setIsLoading(true);
     
     try {
-      // Regular client login with Supabase
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: formData.email,
-        password: formData.password
-      });
-      
-      if (error) {
-        throw error;
-      }
-      
-      toast.success('تم تسجيل الدخول بنجاح');
-      
-      // Create a client session cookie
       const response = await fetch('/api/client/login', {
         method: 'POST',
         headers: {
@@ -57,25 +41,19 @@ export default function LoginForm() {
       
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || 'فشل في إنشاء جلسة العميل');
+        throw new Error(data.message || 'فشل في تسجيل الدخول');
       }
       
-      // Redirect to client dashboard after successful login
+      const data = await response.json();
+      toast.success(data.message || 'تم تسجيل الدخول بنجاح');
+      
       setTimeout(() => {
-        router.push('/client/dashboard');
-        router.refresh(); // Force a refresh to ensure the page reloads with the new session
+        router.push(redirectPath);
+        router.refresh();
       }, 1500);
     } catch (error: any) {
       console.error('Login error:', error);
-      
-      let errorMessage = 'حدث خطأ أثناء تسجيل الدخول';
-      if (error.message.includes('Invalid login credentials')) {
-        errorMessage = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
-      } else if (error.message.includes('Email not confirmed')) {
-        errorMessage = 'يرجى تأكيد البريد الإلكتروني أولاً';
-      }
-      
-      toast.error(errorMessage);
+      toast.error(error.message || 'حدث خطأ أثناء تسجيل الدخول');
     } finally {
       setIsLoading(false);
     }

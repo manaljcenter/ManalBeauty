@@ -13,7 +13,26 @@ export async function GET(request: NextRequest) {
       );
     }
     
-    const session = JSON.parse(clientSession);
+    let session;
+    try {
+      session = JSON.parse(clientSession);
+    } catch (error) {
+      console.error('Error parsing session cookie:', error);
+      return NextResponse.json(
+        { message: 'جلسة غير صالحة' },
+        { status: 401 }
+      );
+    }
+    
+    // Check if clientId exists in session
+    if (!session || !session.clientId) {
+      console.error('Invalid session structure:', session);
+      return NextResponse.json(
+        { message: 'بنية الجلسة غير صالحة' },
+        { status: 401 }
+      );
+    }
+    
     const clientId = session.clientId;
     
     // Get client profile
@@ -48,7 +67,26 @@ export async function PUT(request: NextRequest) {
       );
     }
     
-    const session = JSON.parse(sessionCookie);
+    let session;
+    try {
+      session = JSON.parse(sessionCookie);
+    } catch (error) {
+      console.error('Error parsing session cookie:', error);
+      return NextResponse.json(
+        { message: 'جلسة غير صالحة' },
+        { status: 401 }
+      );
+    }
+    
+    // Check if clientId exists in session
+    if (!session || !session.clientId) {
+      console.error('Invalid session structure:', session);
+      return NextResponse.json(
+        { message: 'بنية الجلسة غير صالحة' },
+        { status: 401 }
+      );
+    }
+    
     const clientId = session.clientId;
     
     // Get update data
